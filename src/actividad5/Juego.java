@@ -1,23 +1,40 @@
 package actividad5;
 
+import damas.entity.Movimientos;
+import damas.entity.Partidas;
+import damas.util.HibernateUtil;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+import org.hibernate.Query;
+import org.hibernate.Session;
+
 /**
  *
  * @author bazag
  */
 public class Juego extends javax.swing.JFrame {
 
-    int filaOrigen, columnaOrigen;
-    boolean juegaX, juegaO;
+    int filaOrigen, columnaOrigen, numMovimientos;
+    boolean juegaX, juegaO, ultimaPartida;
+    Partidas partida;
     
     /**
      * Creates new form Juego
+     * @param partida
+     * @param ultimaPartida
      */
-    public Juego() {
+    public Juego(Partidas partida, boolean ultimaPartida) throws InterruptedException {
         initComponents();
         filaOrigen = -1;
         columnaOrigen = -1;
         juegaX = true;
         juegaO = false;
+        this.partida = partida;
+        numMovimientos = 0;
+        this.ultimaPartida = ultimaPartida;
+        cargarUltimaPartida();
     }
 
     /**
@@ -49,27 +66,19 @@ public class Juego extends javax.swing.JFrame {
 
         jtGame.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"", "O", null, "O", null, "O", null, "O"},
-                {"O", null, "O", null, "O", null, "O", null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, "X", null, "X", null, "X", null, "X"},
-                {"X", null, "X", null, "X", null, "X", null}
+                {"X", " ", "X", " ", "X", " ", "X", " "},
+                {" ", "X", " ", "X", " ", "X", " ", "X"},
+                {" ", " ", " ", " ", " ", " ", " ", " "},
+                {" ", " ", " ", " ", " ", " ", " ", " "},
+                {" ", " ", " ", " ", " ", " ", " ", " "},
+                {" ", " ", " ", " ", " ", " ", " ", " "},
+                {"O", " ", "O", " ", "O", " ", "O", " "},
+                {" ", "O", " ", "O", " ", "O", " ", "O"}
             },
             new String [] {
                 "Col 1", "Col 2", "Col 3", "Col 4", "Col 5", "Col 6", "Col 7", "Col 8"
             }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        ));
         jtGame.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jtGameMouseClicked(evt);
@@ -166,7 +175,7 @@ public class Juego extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public void main(String args[]) {
+    public void main(String args[]) throws InterruptedException {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -179,21 +188,16 @@ public class Juego extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Juego.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Juego.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Juego.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Juego.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Juego().setVisible(true);
+        java.awt.EventQueue.invokeLater(() -> {
+            try {
+                new Juego(partida, this.ultimaPartida).setVisible(true);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Juego.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }
@@ -212,11 +216,11 @@ public class Juego extends javax.swing.JFrame {
     }
 
     public boolean esX(int fila, int columna) {
-        return ((jtGame.getValueAt(fila, columna) != null) && (jtGame.getValueAt(fila, columna).equals("X")));
+        return ((jtGame.getValueAt(fila, columna) != " ") && (jtGame.getValueAt(fila, columna).equals("X")));
     }
 
     public boolean esO(int fila, int columna) {
-        return ((jtGame.getValueAt(fila, columna) != null) && (jtGame.getValueAt(fila, columna).equals("O")));
+        return ((jtGame.getValueAt(fila, columna) != " ") && (jtGame.getValueAt(fila, columna).equals("O")));
     }
 
     public void actualizaNuevoOrigen(int fila, int columna) {
@@ -225,7 +229,7 @@ public class Juego extends javax.swing.JFrame {
     }
 
     public boolean movimientoValido(int fila, int columna) {
-        if (juegaX) {
+        if (juegaO) {
 
              return (((filaOrigen - 1) == fila && (columnaOrigen + 1) == columna) || ((filaOrigen - 1) == fila && (columnaOrigen - 1) == columna));
 
@@ -237,17 +241,17 @@ public class Juego extends javax.swing.JFrame {
 
     public boolean esVacio(int fila, int columna) {
         Object valor = jtGame.getValueAt(fila, columna);
-        return (valor == null);
+        return (valor == " ");
     }
 
     public boolean ocupadoPropio(int fila, int columna) {
         if (juegaX) {
             
-            return ((jtGame.getValueAt(fila, columna) != null) && jtGame.getValueAt(fila, columna).equals("O"));
+            return ((jtGame.getValueAt(fila, columna) != " ") && jtGame.getValueAt(fila, columna).equals("O"));
             
         } else {
             
-            return ((jtGame.getValueAt(fila, columna)!= null) && jtGame.getValueAt(fila, columna).equals("X"));
+            return ((jtGame.getValueAt(fila, columna)!= " ") && jtGame.getValueAt(fila, columna).equals("X"));
         }
     }
 
@@ -274,7 +278,7 @@ public class Juego extends javax.swing.JFrame {
 
         // La seteamos y cambiamos el valor de origen
         jtGame.setValueAt(ficha, fila, columna);
-        jtGame.setValueAt(null, filaOrigen, columnaOrigen);
+        jtGame.setValueAt(" ", filaOrigen, columnaOrigen);
 
         // Ponemos todo tal y como estaba antes de realizar el movimiento
         filaOrigen = -1;
@@ -285,6 +289,78 @@ public class Juego extends javax.swing.JFrame {
         } else {
             juegaX = true;
             juegaO = false;
+        }
+
+        numMovimientos++;
+        guardarMovimientos();
+    }
+
+    private void guardarMovimientos() {
+
+        // Iniciamos la sesion
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+
+        Movimientos movimiento;
+        movimiento = new Movimientos();
+
+        // Guardamos los movimientos de la respectiva partida
+        movimiento.setPartidas(partida);
+        String estadoTablero = new String();
+        for (int i = 0; i <= 7; i++) {
+            for (int j = 0; j <= 7; j++) {
+                estadoTablero += jtGame.getValueAt(i, j);
+            }
+        }
+        movimiento.setMovimientos(estadoTablero);
+        session.save(movimiento);
+        partida.setNumMovimientos(numMovimientos);
+        session.update(partida);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void cargarUltimaPartida() throws InterruptedException {
+
+        if (this.ultimaPartida) {
+
+            // Declaramos las variables
+            int id = 0;
+            String valorFicha;
+            Movimientos movimientosString;
+            char[] movimientoArray;
+            String movimiento;
+            String seleccionarPartida = "SELECT id FROM partidas WHERE id = (SELECT MAX(id) FROM partidas)";
+            String seleccionarMovimientos = "SELECT movimientos FROM movimientos WHERE id_partida = :id";
+
+            // Cogemos los datos de la última partida y la id
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            session.beginTransaction();
+            Query ultimaPartidaQuery = session.createSQLQuery(seleccionarPartida);
+            List list = ultimaPartidaQuery.list();
+            id = (int) list.get(0);
+            
+            // Cogemos los movimientos y los guardamos
+            Query movimientoPartidaQuery = session.createSQLQuery(seleccionarMovimientos);
+            movimientoPartidaQuery.setParameter("id", id);
+            List<String> listaMovimientos = movimientoPartidaQuery.list();
+            
+            for (String listaMovimiento : listaMovimientos) {
+                int contador = 0;
+                for (int i = 0; i < jtGame.getRowCount(); i++) {
+                    for (int j = 0; j < jtGame.getColumnCount(); j++) {
+                        
+                        jtGame.setValueAt(String.valueOf(listaMovimiento.charAt(contador)), i, j);
+                        contador++;
+                    }
+                }
+                
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Juego.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
     }
 

@@ -89,85 +89,85 @@
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="8" rowCount="8">
-                <Column editable="false" title="Col 1" type="java.lang.Object">
-                  <Data value=""/>
-                  <Data value="O"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
+                <Column editable="true" title="Col 1" type="java.lang.Object">
                   <Data value="X"/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value="O"/>
+                  <Data value=" "/>
                 </Column>
-                <Column editable="false" title="Col 2" type="java.lang.Object">
-                  <Data value="O"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
+                <Column editable="true" title="Col 2" type="java.lang.Object">
+                  <Data value=" "/>
                   <Data value="X"/>
-                  <Data value="null"/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value="O"/>
                 </Column>
-                <Column editable="false" title="Col 3" type="java.lang.Object">
-                  <Data value="null"/>
-                  <Data value="O"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
+                <Column editable="true" title="Col 3" type="java.lang.Object">
                   <Data value="X"/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value="O"/>
+                  <Data value=" "/>
                 </Column>
-                <Column editable="false" title="Col 4" type="java.lang.Object">
-                  <Data value="O"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
+                <Column editable="true" title="Col 4" type="java.lang.Object">
+                  <Data value=" "/>
                   <Data value="X"/>
-                  <Data value="null"/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value="O"/>
                 </Column>
-                <Column editable="false" title="Col 5" type="java.lang.Object">
-                  <Data value="null"/>
-                  <Data value="O"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
+                <Column editable="true" title="Col 5" type="java.lang.Object">
                   <Data value="X"/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value="O"/>
+                  <Data value=" "/>
                 </Column>
-                <Column editable="false" title="Col 6" type="java.lang.Object">
-                  <Data value="O"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
+                <Column editable="true" title="Col 6" type="java.lang.Object">
+                  <Data value=" "/>
                   <Data value="X"/>
-                  <Data value="null"/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value="O"/>
                 </Column>
-                <Column editable="false" title="Col 7" type="java.lang.Object">
-                  <Data value="null"/>
-                  <Data value="O"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
+                <Column editable="true" title="Col 7" type="java.lang.Object">
                   <Data value="X"/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value="O"/>
+                  <Data value=" "/>
                 </Column>
-                <Column editable="false" title="Col 8" type="java.lang.Object">
-                  <Data value="O"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
-                  <Data value="null"/>
+                <Column editable="true" title="Col 8" type="java.lang.Object">
+                  <Data value=" "/>
                   <Data value="X"/>
-                  <Data value="null"/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value=" "/>
+                  <Data value="O"/>
                 </Column>
               </Table>
             </Property>

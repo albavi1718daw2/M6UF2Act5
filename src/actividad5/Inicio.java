@@ -5,6 +5,13 @@
  */
 package actividad5;
 
+import damas.entity.Partidas;
+import damas.util.HibernateUtil;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.hibernate.Session;
+
 /**
  *
  * @author bazag
@@ -33,7 +40,12 @@ public class Inicio extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jbCargarPartida.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jbCargarPartida.setText("CARGAR NUEVA PARTIDA");
+        jbCargarPartida.setText("CARGAR ÚLTIMA PARTIDA");
+        jbCargarPartida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbCargarPartidaActionPerformed(evt);
+            }
+        });
 
         jbNuevaPartida.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jbNuevaPartida.setText("NUEVA PARTIDA");
@@ -74,9 +86,36 @@ public class Inicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbNuevaPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbNuevaPartidaActionPerformed
+       
+        // Creamos nueva partida
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        
+        Partidas partida = new Partidas();
+        Date date = new Date(System.currentTimeMillis());
+        partida.setFecha(date);
+        partida.setNumMovimientos(0);
+        session.save(partida);
+        session.getTransaction().commit();
+        session.close();
+        
         this.setVisible(false);
-        new Juego().setVisible(true);
+        try {
+            new Juego(partida, false).setVisible(true);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jbNuevaPartidaActionPerformed
+
+    private void jbCargarPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCargarPartidaActionPerformed
+        
+        this.setVisible(false);
+        try {
+            new Juego(null, true).setVisible(true);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jbCargarPartidaActionPerformed
 
     /**
      * @param args the command line arguments
